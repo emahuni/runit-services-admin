@@ -3,7 +3,7 @@
 #
 
 function printHelp {
-		echo "$0\n"
+		echo "$0 - run a service installed in the SVDIR/activen"
 		echo "Usage $0 [-b|-f] service";
 		echo " - service is name of the service to run from the $SVDIR (default: $HOME/.sv)"
 		echo " - b for running in background (default)."
