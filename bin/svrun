@@ -1,12 +1,21 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
 
-# service=""
-# bg="1"
+function printHelp {
+		echo "$0\n"
+		echo "Usage $0 [-b|-f] service";
+		echo " - service is name of the service to run from the $SVDIR (default: $HOME/.sv)"
+		echo " - b for running in background (default)."
+		echo " - f for running it in foreground. This is generally for testing.";;
+}
+
+if [ ( $# <= 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
 
 case $# in
 		1) service=$1;;
 		2) service=$2;;
-		*) echo "Usage $0 [-b|-f] service"; exit 1;;
+		*) printHelp; exit 1;;
 esac
 
 # echo service: $service
