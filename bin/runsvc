@@ -1,9 +1,44 @@
 #!/data/data/com.termux/files/usr/bin/sh
 
-if  ! grep "down" $SVDIR/$1/supervise/stat; then
-		echo "Starting service $SVDIR/$1..."
-		if  -o v; then echo 'wayiziva'; (runsv $SVDDIR/$1); else echo 'ok'; (runsv $SVDIR/$1 >/dev/null 2>&1 & ); fi
-		# while getopts ":v"
+# service=""
+# bg="1"
+
+case $# in
+		1) service=$1;;
+		2) service=$2;;
+		*) echo "Usage $0 [-b|-f] service"; exit 1;;
+esac
+
+# echo service: $service
+
+# see if the service is defined in the svdir
+if [ -d $SVDIR/$service ]; then
+		# check if we don't have a stat file or if we are not running the service already
+		if ([ ! -e $SVDIR/$service/supervise/stat ]) || (! grep -q "run" $SVDIR/$service/supervise/stat); then
+				# remove the supervise dir if it exists
+				if [ -d $SVDIR/$service/supervise ]; then rm -rf $SVDIR/$service/supervise; fi
+
+				echo "Starting service $SVDIR/$service...";
+
+				# check the kind of 
+				while getopts ":f" opt
+				do
+						case $opt in
+								f) fg="1";; #echo 'in fg mode';;
+								*) fg="0";: # echo 'in bg mode'; ;;
+						esac
+				done
+				shift $(($OPTIND - 1))
+
+				if [ $fg ]; then
+						(runsv $SVDIR/$1);
+				else
+						(runsv $SVDIR/$1 >/dev/null 2>&1 & );
+				fi
+		else
+				echo "Service $service already running."
+		fi
+else
+		echo "Service $service isn't defined in '$SVDIR'";
+		exit 2;
 fi
-# (runsv $SVDIR/docs >/dev/null 2>&1 & )
-#(runsv $SVDIR/cloudcmd >/dev/null 2>&1 & )
