@@ -1,0 +1,3 @@
+#!/data/data/com.termux/usr/bin/bash
+
+exec -a testsv sleep 1000000 &
