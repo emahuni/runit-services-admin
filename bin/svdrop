@@ -1,0 +1,20 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$0 - deactivate service by moving it to inactive services dir. Stops it if running.\n"
+		echo "Usage $0 [-db] service [backup-dir]"
+		echo " - -d: delete the service completely, don't move it to inactive services dir. (maybe used with -b)"
+		echo " - -b: backup the service to the specified dir, don't deactivate or remove it."
+		echo " - service: the name of the service to deactivate (mv to inactive dir) from the $SVDIR (defaults: SVDIR=$HOME/.sv)"
+		echo " - backup-dir: the dir to cp the service to instead of moving it to inactive dir."
+}
+
+if [ ( $# < 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
+
+case $# in
+		1) service=$1;;
+		2) backup=$2;;
+		*) printHelp; exit 2;;
+esac
