@@ -19,3 +19,42 @@ case $# in
 		2) command=$2;;
 		*) printHelp; echo "\nPlease quote your command in single quotes. The command should be one entity and non-executable.\n"; exit 2;;
 esac
+
+# make sure we have a default for the services directory
+if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
+
+if [ -d "$SVDIR/.sv/active/$name" ]; then
+		echo "Service '$name' already exists and is active.";
+		exit 3;
+fi
+
+
+serviceDir="$SVDIR/.sv/active/$name"
+
+# make the dir tree to the service
+(mkdir "$serviceDir" -p)
+
+# create the service run file
+echo "#!/data/data/com.termux/files/usr/bin/sh
+echo 'Starting $name service...''
+if [ \$fg ]; then
+		exec $command
+else
+		exec $command >/dev/null 2>&1
+fi
+" > "$serviceDir/run"
+
+
+# create the service finish file
+echo "#!/data/data/com.termux/files/usr/bin/sh
+echo 'Cleaning up after $name service...''
+if [ \$fg ]; then
+		# do something
+else
+		# do something
+fi
+" > "$serviceDir/finish"
+
+# mark the files as executable
+(chmod +7 "$serviceDir/run" "$serviceDir/finish")
+
