@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+if  ! grep "down" $SVDIR/$1/supervise/stat; then
+		echo "Starting service $SVDIR/$1..."
+		if  -o v; then echo 'wayiziva'; (runsv $SVDDIR/$1); else echo 'ok'; (runsv $SVDIR/$1 >/dev/null 2>&1 & ); fi
+		# while getopts ":v"
+fi
+# (runsv $SVDIR/docs >/dev/null 2>&1 & )
+#(runsv $SVDIR/cloudcmd >/dev/null 2>&1 & )
