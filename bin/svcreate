@@ -37,33 +37,50 @@ fi
 (mkdir "$serviceDir" -p)
 
 # create the service run file
-echo "#!/data/data/com.termux/files/usr/bin/sh
+echo "#!/data/data/com.termux/files/usr/bin/bash
 echo 'Starting $name service...'
+# do any preliminaries here, setting of paths ports etc
+if [ -z \$sleeping ]; then export sleeping=100; fi
+
 if [ \$fg ]; then
+    # run command in the foreground, this is mainly there for testing purposes, when troubleshooting service
+    # use fg=1 runsv /path/to/this/service/dir
+    # then see if there are any errors or issues when the command runs, this enables you to debug the service
+    # nb: the foreground and background commands should be identical except for the redirection. so whatever
+    #     changes you do when troubleshooting, reflect them on the background service as well since it is the
+    #     default that is run by services admin.
     exec $command
 else
+    # run command in the background, this is the actual expected behaviour of services and the default command
+    # that is ran by services admin.
     exec $command >/dev/null 2>&1
 fi
 " > "$serviceDir/run"
 
 
 # create the service finish file
-echo "#!/data/data/com.termux/files/usr/bin/sh
+echo "#!/data/data/com.termux/files/usr/bin/bash
 echo 'Cleaning up after $name service...'
+# do any preliminaries here, setting of paths ports etc
+
 if [ \$fg ]; then
-    # do something
+    # do something in the foreground
+		echo 'wip finish script foreground mode'
 else
-    # do something
+    # do something in the background
+		echo 'wip finish script background mode' >/dev/null 2>&1
 fi
 " > "$serviceDir/finish"
 
-# mark the files as executable
-(chmod 755 "$serviceDir/run" "$serviceDir/finish")
+# mark the files as executable and readonly, only editable by the owner.
+(chmod 777 "$serviceDir" "$serviceDir/run" "$serviceDir/finish")
 
 if [[ -x "$serviceDir/run" ]] && [[ -x "$serviceDir/finish"  ]]; then
 		echo "'$name' service created successfully!";
 elif [[ -e "$serviceDir/run" ]] && [[ -e "$serviceDir/finish"  ]]; then
-		echo "'$name' service files couldn't be set to executable!\nDo it manually: sudo chmod 755 $serviceDir/run $serviceDir/finish\n or delete generated service files and try again with: sudo $0 $1 $2.";
+		echo "Unable to chmod 755 '$name' service files! You probably ran this without root permission.\nDo it manually: sudo chmod 755 $serviceDir/run $serviceDir/finish\n or delete generated service files and try again with: sudo $0 $1 $2.";
 else
-		echo "failed to create service $name";
+		echo "Failed to create service $name!";
+		echo "This command should be run with root permissions. ie: sudo $0 $1 $2"
+		echo "Open the service destination and see if any files were created with 755 permissions.";
 fi
