@@ -1,29 +1,20 @@
 #!/data/data/com.termux/file/usr/bin/env bats
 
-SVDIRBCK=$SVDIR
-SVDIR="$(pwd)/test/SVDIR"
-
-service="$SVDIR/active/test_svcreate"
+service="$activeSV/test_svcreate"
 
 @test "svcreate: Creates a new service from given name and command" {
-		# make sure the svdir is clean
-		rm -rf "$SVDIR" echo.log
+		# make sure the service is clean
+		rm -rf "$service" echo.log
 
 		run ./bin/svcreate test_svcreate 'sleep $sleeping'
 		# echo $output > "./echo.log"
 		[[ $status == "0" ]]
 		[[ $output == *"service created successfully"* ]]
-}
 
-@test "svcreate: Verify new service files executability" {
+		# "svcreate: Verify new service files executability"
+		# echo $service > echo1.log
 		[[ -x "$service/run" ]]
-
 		[[ -x "$service/finish" ]]
-
-		# remove the following if next test is enabled
-		# teardown
-		rm -rf $SVDIR
-		SVDIR=$SVDIRBCK
 }
 
 @test "svcreate: Verify new service by actually running it and stopping it" {
@@ -47,8 +38,19 @@ service="$SVDIR/active/test_svcreate"
 		# stop the service
 		run sv exit "$service"
 		[[ $status == "0" ]]
+}
 
-		# teardown
-		rm -rf $SVDIR
-		SVDIR=$SVDIRBCK
+
+@test "svcreate: Creates a pasive (down) service from given name and command" {
+		skip
+		# make sure the svdir is clean
+		rm -rf "$service" echo.log
+
+		run ./bin/svcreate -d test_svcreate 'sleep $sleeping'
+		# echo $output > "./echo.log"
+		[[ $status == "0" ]]
+		[[ $output == *"service created successfully"* ]]
+		[[ -x "$service/run" ]]
+		[[ -x "$service/finish" ]]
+		[[ -x "$service/down" ]]
 }
