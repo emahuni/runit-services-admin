@@ -12,6 +12,7 @@
 *.swp
 *.swo
 *~
+test/SVDIR
 
 # Packages #
 ############

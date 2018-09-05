@@ -8,53 +8,62 @@ function printHelp {
 		echo " - name is the name of the service to create in the $SVDIR (default SVDIR=$HOME/.sv)"
 		echo " - command is the complete command that runs the service. This includes and args and options.";
 		echo "   - it should be single quoted to avoid running it";
-		echo " - path to a backup copy of service."
+		echo " - path to a backup copy of service to use instead of creating a new one."
 		echo " - you can customise the resulting script later in the service dir for other prelimenaries.";
 }
 
-if [ ( $# <= 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
+# if  [ $# <= 1 ]; then printHelp; exit 1; fi
+# if  [ $1 == "help" ]; then printHelp; exit 1; fi
+# if  ( [ $# <= 1 ] ) || ( [$1 == "help"] ) || ( [$1 == "--help"] ) ||  ( [$1 == "-h"] ); then printHelp; exit 1; fi
+# if  ( [ $# <= 1 ] ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ); then printHelp; exit 1; fi
 
 case $# in
-		1) name=$1;;
-		2) command=$2;;
+		2) command=$2; name=$1;;
 		*) printHelp; echo "\nPlease quote your command in single quotes. The command should be one entity and non-executable.\n"; exit 2;;
 esac
 
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
-if [ -d "$SVDIR/.sv/active/$name" ]; then
-		echo "Service '$name' already exists and is active.";
+serviceDir="$SVDIR/active/$name"
+
+if [ -d "$serviceDir" ]; then
+		echo "Service '$name' already exists as '$serviceDir'.";
 		exit 3;
 fi
 
-
-serviceDir="$SVDIR/.sv/active/$name"
 
 # make the dir tree to the service
 (mkdir "$serviceDir" -p)
 
 # create the service run file
 echo "#!/data/data/com.termux/files/usr/bin/sh
-echo 'Starting $name service...''
+echo 'Starting $name service...'
 if [ \$fg ]; then
-		exec $command
+    exec $command
 else
-		exec $command >/dev/null 2>&1
+    exec $command >/dev/null 2>&1
 fi
 " > "$serviceDir/run"
 
 
 # create the service finish file
 echo "#!/data/data/com.termux/files/usr/bin/sh
-echo 'Cleaning up after $name service...''
+echo 'Cleaning up after $name service...'
 if [ \$fg ]; then
-		# do something
+    # do something
 else
-		# do something
+    # do something
 fi
 " > "$serviceDir/finish"
 
 # mark the files as executable
-(chmod +7 "$serviceDir/run" "$serviceDir/finish")
+(chmod 755 "$serviceDir/run" "$serviceDir/finish")
 
+if [[ -x "$serviceDir/run" ]] && [[ -x "$serviceDir/finish"  ]]; then
+		echo "'$name' service created successfully!";
+elif [[ -e "$serviceDir/run" ]] && [[ -e "$serviceDir/finish"  ]]; then
+		echo "'$name' service files couldn't be set to executable!\nDo it manually: sudo chmod 755 $serviceDir/run $serviceDir/finish\n or delete generated service files and try again with: sudo $0 $1 $2.";
+else
+		echo "failed to create service $name";
+fi
