@@ -5,24 +5,23 @@ SVDIR="$(pwd)/test/SVDIR"
 
 service="$SVDIR/active/test_svcreate"
 
-@test "Creates a new service from given name and command" {
+@test "svcreate: Creates a new service from given name and command" {
 		# make sure the fixtures dir is clean
 		rm -rf "$service"
 
 		run ./bin/svcreate test_svcreate '-a test_svcreate sleep 1000000'
-		echo $output > "./out.log"
+		# echo $output > "./out.log"
 		[[ $status == "0" ]]
 		[[ $output == *"service created successfully"* ]]
 }
 
-@test "Verify the actual service files" {
-		skip "wip"
+@test "svcreate: Verify service files executability" {
 		[[ -x "$service/run" ]]
 
 		[[ -x "$service/finish" ]]
 }
 
-@test "Verify the service by actually running it and stopping it" {
+@test "svcreate: Verify the service by actually running it and stopping it" {
 		skip "wip"
 		fg="1";
 		# run the service
