@@ -49,11 +49,11 @@ if [ \$fg ]; then
     # nb: the foreground and background commands should be identical except for the redirection. so whatever
     #     changes you do when troubleshooting, reflect them on the background service as well since it is the
     #     default that is run by services admin.
-    exec $command
+    chpst $command
 else
     # run command in the background, this is the actual expected behaviour of services and the default command
     # that is ran by services admin.
-    exec $command >/dev/null 2>&1
+    chpst $command >/dev/null 2>&1
 fi
 " > "$serviceDir/run"
 

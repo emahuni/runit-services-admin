@@ -19,14 +19,20 @@ service="$SVDIR/active/test_svcreate"
 		[[ -x "$service/run" ]]
 
 		[[ -x "$service/finish" ]]
+
+		# remove the following if next test is enabled
+		# teardown
+		rm -rf $SVDIR
+		SVDIR=$SVDIRBCK
 }
 
 @test "svcreate: Verify new service by actually running it and stopping it" {
+		skip "run cannot work well with runsv, (it is freezing) so I will need to try after updating bats"
 		export fg=0
 		export sleeping=30
 		# run the service
-		# run runsv "$service" >/dev/null 2>&1
-		runsv "$service" >/dev/null 2>&1
+		run runsv "$service" >/dev/null 2>&1
+		# ( chpst runsv "$service" ) #>/dev/null 2>&1)
 		echo $output > "./echo.log"
 
 		# wait for it to initialize
