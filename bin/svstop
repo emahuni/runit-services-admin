@@ -9,10 +9,20 @@ function printHelp {
 		echo " - service: the name of the service to stop."
 }
 
-if [ ( $# < 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
+# if [ ( $# < 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
 
 case $# in
 		1) service=$1;;
 		*) printHelp; exit 2;;
 esac
 
+
+
+# make sure we have a default for the services directory
+if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
+
+serviceDir="$SVDIR/active/$service"
+
+echo "stopping service $service"
+
+sv down "$serviceDir"
