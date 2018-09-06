@@ -25,15 +25,9 @@ bats **/*.bats
 function doTeardown {
 		sleep 1
 
-		if [ $(pidof runsvdir) ]; then
-				echo "kill runsvdir on pid $(pidof runsvdir)"
-				kill $(pidof runsvdir)
-		fi
-
-		if [ $(pidof runsv) ]; then
-				echo "kill runsv on pid(s) $(pidof runsv)"
-				kill $(pidof runsv)
-		fi
+		echo "kill runsvdir on pid $(pidof runsvdir)"
+		echo "kill runsv on pid(s) $(pidof runsv)"
+		pkill -HUP runsvdir
 
 		sleep 1
 
