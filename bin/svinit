@@ -1,0 +1,73 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$0 - run all services installed in the SVDIR/active using runsvdir: $SVDIR (default: $HOME/.sv)\n\n"
+		echo "Usage $0 [-b|-f] [m]"
+		echo " - b: for running in background (default)."
+		echo " - f: for running it in foreground. This is generally for testing.";;
+		echo " - m: monitor and start any new services in the SVDIR."
+}
+
+if [  ( $1 == "--help" ) ||  ( $# > 2 ) ]; then printHelp; exit 1; fi
+
+# echo service: $service
+
+# check the kind of run we want done
+while getopts ":fmh" opt
+do
+		case $opt in
+				m) monitor=1;;
+				f) export fg="1";; #echo 'in fg mode';;
+				*) printHelp;
+		esac
+done
+shift $(($OPTIND - 1))
+
+# set the default services dir
+if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+
+# see if the services dir has active services defined (active are non-dot dirs)
+services=($SVDIR/*) # create array of SVDIR subdirs
+# check if the array has a length of > 0
+if [ ${#services[*]} > 0 ]; then
+		# kill our runsvdir instance and any runsv instances it spawned (HUP)
+		if [ -e "$SVDIR/.runsvdir.pid" ]; then kill -s HUP `cat "$SVDIR/svadmin.pid"` && rm -rf  $SVDIR/.runsvdir.pid; fi
+
+		# make sure we kill all services in these folders, let's use normal sv control (in case we didn't use runsvdir to spawn these)
+		for s in ${services[*]}; do
+				# just do a complete exit, killing the runsv and running finish in turn
+				 sv exit "$s" 2>/dev/null
+		done
+
+		# remove all supervise dirs
+		rm -rf $SVDIR/*/supervise
+
+		echo "Starting enabled services in $SVDIR...";
+
+		if [ $monitor ]; then
+				if [ $fg ]; then
+						(runsvdir $SVDIR)
+				else
+						(runsvdir $SVDIR >$SVDIR/.runsvdir.log & )
+				fi
+
+				# capture the pid so we know our runsvdir instance
+				$! > $SVDIR/.runsvdir.pid
+		else
+				rm -f $SVDIR/.runsv.log
+				for s in ${services[*]}; do
+						if [ $fg ]; then
+								(runsv $s)
+						else
+								(runsv $s >>$SVDIR/.runsv.log & )
+						fi
+				done
+		fi
+
+		echo "${#services[*]} services initiated successfully!"
+else
+		echo "There is no services in active services dir. ";
+		exit 2;
+fi
