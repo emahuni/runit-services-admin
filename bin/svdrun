@@ -32,17 +32,8 @@ if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 services=($SVDIR/*) # create array of SVDIR subdirs
 # check if the array has a length of > 0
 if [ ${#services[*]} > 0 ]; then
-		# kill our runsvdir instance and any runsv instances it spawned (HUP)
-		if [ -e "$SVDIR/.runsvdir.pid" ]; then kill -s HUP `cat "$SVDIR/svadmin.pid"` && rm -rf  $SVDIR/.runsvdir.pid; fi
-
-		# make sure we kill all services in these folders, let's use normal sv control (in case we didn't use runsvdir to spawn these)
-		for s in ${services[*]}; do
-				# just do a complete exit, killing the runsv and running finish in turn
-				 sv exit "$s" 2>/dev/null
-		done
-
-		# remove all supervise dirs
-		rm -rf $SVDIR/*/supervise
+		# stop previous runsvdir and all services
+		./svdstop
 
 		echo "Starting enabled services in $SVDIR...";
 

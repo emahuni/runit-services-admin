@@ -1,0 +1,26 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2018 MIT
+
+# set the default services dir
+if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+
+# see if the services dir has active services defined (active are non-dot dirs)
+services=($SVDIR/*) # create array of SVDIR subdirs
+# check if the array has a length of > 0
+if [ ${#services[*]} > 0 ]; then
+		# kill our runsvdir instance and any runsv instances it spawned (HUP)
+		if [ -e "$SVDIR/.runsvdir.pid" ]; then
+				kill -s HUP `cat "$SVDIR/.runsvdir.pid"` && rm -rf  $SVDIR/.runsvdir.pid
+		else
+				# make sure we kill all services in these folders, let's use normal sv control
+				for s in ${services[*]}; do
+						# just do a complete exit, killing the runsv and running finish in turn
+						sv exit "$s" 2>/dev/null
+				done
+		fi
+
+		# remove all supervise dirs
+		rm -rf $SVDIR/*/supervise
+
+		echo "Stopped all services and runsvdir (if used)"
+fi
