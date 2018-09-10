@@ -2,7 +2,7 @@
 # Emmanuel Mahuni (c) 2018 MIT
 #
 
-rf -fv $PREFIX/bin/svdrun && rf -fv $PREFIX/bin/svdstop && rf -fv $PREFIX/bin/svcreate && rf -fv $PREFIX/bin/svact && rf -fv $PREFIX/bin/svdeact && rf -fv $PREFIX/bin/svstop && rf -fv $PREFIX/bin/svrun && rf -fv $PREFIX/bin/svstop && rf -fv $PREFIX/bin/svdrop && rf -fv $PREFIX/bin/svlist && rf -fv $PREFIX/bin/svwup && rf -fv $PREFIX/bin/svwdown
+rm -fv $PREFIX/bin/svdrun && rm -fv $PREFIX/bin/svdstop && rm -fv $PREFIX/bin/svcreate && rm -fv $PREFIX/bin/svact && rm -fv $PREFIX/bin/svdeact && rm -fv $PREFIX/bin/svstop && rm -fv $PREFIX/bin/svrun && rm -fv $PREFIX/bin/svstop && rm -fv $PREFIX/bin/svdrop && rm -fv $PREFIX/bin/svlist && rm -fv $PREFIX/bin/svwup && rm -fv $PREFIX/bin/svwdown
 
 
-if [ $? == 0 ]; then echo "uninstallation complete!"; else echo "failed to uninstall!"; fi
+if [ $? == 0 ]; then echo; echo "uninstallation complete!"; else echo; echo "failed to uninstall!"; fi
