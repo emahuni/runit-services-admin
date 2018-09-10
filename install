@@ -2,6 +2,6 @@
 # Emmanuel Mahuni (c) 2008 MIT
 #
 
-cp -fv bin/*.* $PREFIX/bin
+cp -fv bin/* $PREFIX/bin
 
-echo "installation complete!"
+if [ $? == 0 ]; then echo; echo "installation complete!"; else echo; echo "failed to install!"; fi
