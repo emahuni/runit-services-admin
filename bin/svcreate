@@ -3,18 +3,18 @@
 #
 
 function printHelp {
-		echo "$0 - Create a service in the services directory (defaults: $SVDIR=$HOME/.sv)\n"
-		echo "Usage $0 name command|path";
-		echo " - name is the name of the service to create in the $SVDIR (default SVDIR=$HOME/.sv)"
-		echo " - command is the complete command that runs the service. This includes and args and options.";
-		echo "   - it should be single quoted to avoid running it";
-		echo " - path to a backup copy of service to use instead of creating a new one."
-		echo " - you can customise the resulting script later in the service dir for other prelimenaries.";
+		echo "$(basename $0) - Create a service in the services directory (defaults: SVDIR=\$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-h|--help] name command|path"
+		echo " name: the name of the service to create in the $SVDIR (default SVDIR=\$HOME/.sv)"
+		echo " command: complete command that runs the service. This includes and args and options"
+		echo "          - it should be single quoted to avoid running it on definition"
+		echo " path: path to a backup copy of service to use instead of creating a new one"
+		echo "       - you can customise the resulting script later in the service dir for other prelimenaries"
+		echo " -h|--help: display this help screen"
 }
 
-# if  [ $# <= 1 ]; then printHelp; exit 1; fi
-# if  [ $1 == "help" ]; then printHelp; exit 1; fi
-# if  ( [ $# <= 1 ] ) || ( [$1 == "help"] ) || ( [$1 == "--help"] ) ||  ( [$1 == "-h"] ); then printHelp; exit 1; fi
+if  ( [ $# -le 1 ] ) || ( [[ $1 == "--help" ]] ); then printHelp; exit 1; fi
 # if  ( [ $# <= 1 ] ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ); then printHelp; exit 1; fi
 
 case $# in
@@ -25,7 +25,9 @@ esac
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
-serviceDir="$SVDIR/active/$name"
+# todo: do a regex checkup of name
+
+serviceDir="$SVDIR/$name"
 
 if [ -d "$serviceDir" ]; then
 		echo "Service '$name' already exists as '$serviceDir'.";
@@ -53,7 +55,7 @@ if [ \$fg ]; then
 else
     # run command in the background, this is the actual expected behaviour of services and the default command
     # that is ran by services admin.
-    chpst $command >/dev/null 2>&1
+    chpst $command >/dev/null & #
 fi
 " > "$serviceDir/run"
 
@@ -68,7 +70,7 @@ if [ \$fg ]; then
 		echo 'wip finish script foreground mode'
 else
     # do something in the background
-		echo 'wip finish script background mode' >/dev/null 2>&1
+		echo 'wip finish script background mode' >/dev/null & #
 fi
 " > "$serviceDir/finish"
 
