@@ -1,0 +1,35 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$(basename $0) - list all services in the SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0)"
+		echo " - it lists all services, active or inactive"
+}
+
+if [ $# -gt 0 ]; then printHelp; exit 1; fi
+
+# set the default services dir
+if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+
+# see if the services dir has active services defined (active are non-dot dirs)
+services=($SVDIR/*) # create array of SVDIR subdirs
+# check if the array has a length of > 0
+if [ ${#services[*]} -gt 0 ]; then
+		echo "${#services[*]} services installed in $SVDIR:"
+
+		for s in ${services[*]}; do
+				sn=$(basename $s)
+				if [[ $sn == "."* ]]; then
+						avail='(inactive)'
+				else
+						avail='(active)'
+				fi
+
+				echo "    - $sn $avail"
+		done
+else
+		echo "There is no services defined in the services dir: $SVDIR "
+fi
