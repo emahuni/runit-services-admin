@@ -37,7 +37,7 @@ if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 # see if the services dir has active services defined (active are non-dot dirs)
 services=($SVDIR/*) # create array of SVDIR subdirs
 # check if the array has a length of > 0
-if [ ${#services[*]} -g 0 ]; then
+if [ ${#services[*]} -gt 0 ]; then
 		# stop previous runsvdir and all services and clean their dirs of supervise
 		$(dirname $0)/svdstop
 
