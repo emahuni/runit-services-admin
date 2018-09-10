@@ -1,0 +1,47 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$(basename $0) - start a service in down state. SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-h|--help] name"
+		echo " name: the name of the service to start in down state on start"
+		echo " -h|--help: display this help screen"
+		echo
+		echo "Command implies that when svrun or svdrun is invoked for the service, it doesn't"
+		echo "start the service immediately, it goes into into intermediate down state."
+		echo "To begin running the service, you will have to use 'sv up service' command."
+}
+
+if  ( [ $# -lt 1 ] ) || ( [[ $1 == "--help" ]] ); then printHelp; exit 1; fi
+# if  ( [ $# <= 1 ] ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ); then printHelp; exit 1; fi
+
+case $# in
+		1) name=$1;;
+		*) printHelp; exit 2;;
+esac
+
+# make sure we have a default for the services directory
+if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
+
+serviceDir="$SVDIR/$name"
+
+# create the service down file
+echo "#!/data/data/com.termux/files/usr/bin/bash
+echo 'Downing $name service...'
+" > "$serviceDir/down"
+
+# mark the files as executable and readonly, only editable by the owner.
+(chmod 755 "$serviceDir/down")
+
+if [[ -x "$serviceDir/down" ]]; then
+		echo "'$name' service down state created successfully!";
+elif [[ -e "$serviceDir/down" ]]; then
+		echo "Unable to chmod 755 '$name/down' service file! You probably ran this without root permission."
+		echo """Do it manually: sudo chmod 755 $serviceDir/down";
+else
+		echo "Failed to create service down state!";
+		echo "This command should be run with root permissions. ie: sudo $(basename $0) $1"
+		echo "Open the service destination and see if the down file was created with 755 permissions";
+fi
