@@ -3,10 +3,10 @@
 #
 
 function printHelp {
-		echo "$(basename $0) - start a service in down state. SVDIR (default: \$HOME/.sv)"
+		echo "$(basename $0) - set a service to go down on startup. SVDIR (default: \$HOME/.sv)"
 		echo
 		echo "Usage $(basename $0) [-h|--help] name"
-		echo " name: the name of the service to start in down state on start"
+		echo " name: the name of the service to go down on startup"
 		echo " -h|--help: display this help screen"
 		echo
 		echo "Command implies that when svrun or svdrun is invoked for the service, it doesn't"
@@ -26,6 +26,8 @@ esac
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
 serviceDir="$SVDIR/$name"
+
+if [[ -e "$serviceDir/down" ]]; then echo "service already set to go down on startup"; exit 0; fi
 
 # create the service down file
 echo "#!/data/data/com.termux/files/usr/bin/bash
