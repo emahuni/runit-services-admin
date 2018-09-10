@@ -22,12 +22,14 @@ esac
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
-serviceDir="$SVDIR/active/$service"
+serviceDir="$SVDIR/$service"
 
-echo "stopping service $service and removing supervise control"
+echo "Stopping service '$service' and removing supervise control"
 
 sv exit "$serviceDir"
 
+sleep 1
+
 rm -rf "$serviceDir/supervise"
 
-echo "Stopped service $service successfully."
+echo "Stopped and cleaned service '$service' successfully."
