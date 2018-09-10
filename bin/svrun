@@ -44,9 +44,14 @@ if [ -d "$SVDIR/$service" ]; then
 				echo "Taking service up, it was down..."
 				sv up $service
 		elif ( [[ $status != *"run:"* ]] ) || ( [ ! -z $rstsv ] ); then
-				# the status is something else probably a warning.
-				# remove the supervise dir if it exists
-				if [ -d "$SVDIR/$service/supervise" ]; then rm -rf "$SVDIR/$service/supervise"; fi
+				if [ ! -z $rstsv ]; then
+						$(dirname $0)/svstop $service
+						sleep 1
+				else
+						# the status is something else probably a warning.
+						# remove the supervise dir if it exists
+						if [ -d "$SVDIR/$service/supervise" ]; then rm -rf "$SVDIR/$service/supervise"; fi
+				fi
 
 				echo "Starting service $SVDIR/$service..."
 
