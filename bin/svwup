@@ -1,0 +1,37 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$(basename $0) - set service to start in up state. SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-h|--help] name"
+		echo " name: the name of the service to set to start in up state"
+		echo " -h|--help: display this help screen"
+		echo
+		echo "Command implies that when svrun or svdrun is invoked for the service, it"
+		echo "starts the service immediately, it goes into into up state (runs)."
+		echo "To down the service, you will have to use 'sv down service' command."
+}
+
+if  ( [ $# -lt 1 ] ) || ( [[ $1 == "--help" ]] ); then printHelp; exit 1; fi
+# if  ( [ $# <= 1 ] ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ); then printHelp; exit 1; fi
+
+case $# in
+		1) name=$1;;
+		*) printHelp; exit 2;;
+esac
+
+# make sure we have a default for the services directory
+if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
+
+serviceDir="$SVDIR/$name"
+
+# remove service down file if it exists
+if [[ -e "$serviceDir/down" ]]; then rm -f "$serviceDir/down"; fi
+
+if [ $? == 0 ]; then
+		echo "'$name' service up startup state set successfully!";
+else
+		echo "Failed to set service up startup state!";
+fi
