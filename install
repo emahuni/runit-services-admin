@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+cp -fv bin/*.* $PREFIX/bin
+
+echo "installation complete!"
