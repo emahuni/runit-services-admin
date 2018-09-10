@@ -1,0 +1,39 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$(basename $0) - delete the service from the service dir (SVDIR default: \$HOME/.sv). Stops it if running.\n"
+		echo
+		echo "Usage $(basename $0) service [backup-dir]"
+		echo " service: the name of the service to delete or backup"
+		echo " backup-dir: the dir to backup the service to before deleting it"
+}
+
+case $# in
+		2) backup=$2;&
+		1) service=$1;;
+		0) printHelp; exit 2;;
+esac
+
+# echo service $service
+# echo backup $backup
+# exit 1
+
+# set the default services dir
+if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+
+# stop the service
+"$(dirname $0)"/svstop $service
+
+if [ ! -z $backup ]; then
+		echo "backing up service to $backup ..."
+		mkdir -p "$backup"
+		cp -rf "$SVDIR/$service" "$backup"
+		if [[ $? == 0 ]]; then echo "service backup was successfull"; else echo "couldn't backup service!"; exit 3; fi
+fi
+
+echo "deleting service '$service'..."
+rm -rf "$SVDIR/$service"
+
+if [[ $? == 0 ]]; then echo "service was successfully removed"; fi
