@@ -4,12 +4,13 @@
 #
 
 function printHelp {
-		echo "$0 - stops service if running.\n"
-		echo "Usage $0 service"
-		echo " - service: the name of the service to stop."
+		echo "$(basename $0) - stops service (in SVDIR - default: \$HOME/.sv) if running."
+		echo
+		echo "Usage $(basename $0) service"
+		echo " service: the name of the service to stop"
 }
 
-# if [ ( $# < 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
+if ( [ $# -lt 1 ] ) || ( [ $1 == "--help" ] ) ||  ( [ $1 == "-h" ] ) ; then printHelp; exit 1; fi
 
 case $# in
 		1) service=$1;;
@@ -21,12 +22,14 @@ esac
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
-serviceDir="$SVDIR/active/$service"
+serviceDir="$SVDIR/$service"
 
-echo "stopping service $service and removing supervise control"
+echo "Stopping service '$service' and removing supervise control"
 
 sv exit "$serviceDir"
 
+sleep 1
+
 rm -rf "$serviceDir/supervise"
 
-echo "Stopped service $service successfully."
+echo "Stopped and cleaned service '$service' successfully."
