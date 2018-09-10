@@ -28,7 +28,7 @@ if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 serviceDir="$SVDIR/$name"
 
 # remove service down file if it exists
-if [[ -e "$serviceDir/down" ]]; then rm -f "$serviceDir/down"; fi
+if [[ -e "$serviceDir/down" ]]; then rm -f "$serviceDir/down"; else echo "service already set to go up on startup"; exit 0; fi
 
 if [ $? == 0 ]; then
 		echo "'$name' service up startup state set successfully!";
