@@ -1,0 +1,32 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Emmanuel Mahuni (c) 2008 MIT
+#
+
+function printHelp {
+		echo "$(basename $0) - activate a service in the SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) service"
+		echo " service: the name of the service to activate"
+}
+
+case $# in
+		1) service=$1;;
+		*) printHelp; exit 1;;
+esac
+
+# set the default services dir
+if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+
+deactiveDir="$SVDIR/.$service"
+
+if [ ! -d $deactiveDir ]; then
+		echo "couldn't active service '$service' from '$deactiveDir'!"
+		exit 3
+fi
+
+echo "activating service $service ..."
+
+mv -f "$deactiveDir" "$SVDIR/$service"
+
+
+if [[ $? == 0 ]]; then echo "service was successfully activated"; else echo "couldn't activate service successfully!"; exit 4; fi
