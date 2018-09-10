@@ -24,7 +24,7 @@ esac
 if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 
 # stop the service
-"$(dirname $0)"/svstop $service
+if [[ $(sv s $service) != *"warning"* ]]; then "$(dirname $0)"/svstop $service; fi
 
 if [ ! -z $backup ]; then
 		echo "backing up service to $backup ..."
