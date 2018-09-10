@@ -50,11 +50,11 @@ if [ \$fg ]; then
     # nb: the foreground and background commands should be identical except for the redirection. so whatever
     #     changes you do when troubleshooting, reflect them on the background service as well since it is the
     #     default that is run by services admin.
-    (chpst $command)
+    chpst $command
 else
     # run command in the background, this is the actual expected behaviour of services and the default command
     # that is ran by services admin.
-    (chpst $command >/dev/null & )
+    chpst $command >/dev/null 2>&1
 fi
 " > "$serviceDir/run"
 
@@ -69,7 +69,7 @@ if [ \$fg ]; then
 		echo 'wip finish script foreground mode'
 else
     # do something in the background
-		echo 'wip finish script background mode' >/dev/null & #
+		echo 'wip finish script background mode' >/dev/null 2>&1
 fi
 " > "$serviceDir/finish"
 
