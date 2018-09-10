@@ -3,14 +3,16 @@
 #
 
 function printHelp {
-		echo "$0 - run a service installed in the SVDIR/active"
-		echo "Usage $0 [-b|-f] service";
-		echo " - service is name of the service to run from the $SVDIR (default: $HOME/.sv)"
-		echo " - b for running in background (default)."
-		echo " - f for running it in foreground. This is generally for testing.";;
+		echo "$(basename $0) - run a service installed in the SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-b|-f] service"
+		echo " service: name of the service to run from the SVDIR"
+		echo " -b: run as a background process (default)"
+		echo " -f: run as a foreground process, generally for testing"
+		echo " -r: restart service if it is running"
 }
 
-if [ ( $# <= 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
+if ( [ $# -lt 1 ] ) || ( [ $1 == "--help" ] ) ||  ( [ $1 == "-h" ] ) ; then printHelp; exit 1; fi
 
 case $# in
 		1) service=$1;;
@@ -21,42 +23,42 @@ esac
 # echo service: $service
 
 # check the kind of run we want done
-while getopts ":f" opt
+while getopts ":fbr" opt
 do
 		case $opt in
 				f) export fg="1";; #echo 'in fg mode';;
-				*) export fg="0";: # echo 'in bg mode'; ;;
+				b) export fg="0";; # echo 'in bg mode'; ;;
+				r) rstsv=1;;
 		esac
 done
 shift $(($OPTIND - 1))
 
 
 # see if the service is defined in the svdir
-if [ -d $SVDIR/$service ]; then
+if [ -d "$SVDIR/$service" ]; then
 		# check if the status of the service can be queried
-		status=$(sv status $SVDIR/$service);
+		status=$(sv status $service)
 		# echo "status: $status"
 		if [[ $status == *"down"* ]]; then
 				# the service was taken down normally so we need to take it up graciously
-				echo "Taking service up, it was down...";
-				(sv up $SVDIR/$service);
-
-		elif [[ $status != *"run:"* ]]; then
+				echo "Taking service up, it was down..."
+				sv up $service
+		elif ( [[ $status != *"run:"* ]] ) || ( [ ! -z $rstsv ] ); then
 				# the status is something else probably a warning.
 				# remove the supervise dir if it exists
-				if [ -d $SVDIR/$service/supervise ]; then rm -rf $SVDIR/$service/supervise; fi
+				if [ -d "$SVDIR/$service/supervise" ]; then rm -rf "$SVDIR/$service/supervise"; fi
 
-				echo "Starting service $SVDIR/$service...";
+				echo "Starting service $SVDIR/$service..."
 
 				if [ $fg ]; then
-						(runsv $SVDIR/$1);
+						runsv "$SVDIR/$1"
 				else
-						(runsv $SVDIR/$1 >/dev/null 2>&1 & );
+						runsv "$SVDIR/$1" >/dev/null & #
 				fi
 		else
 				echo "Service $service already running."
 		fi
 else
-		echo "Service $service isn't defined in '$SVDIR'";
-		exit 2;
+		echo "Service $service isn't defined in '$SVDIR'"
+		exit 2
 fi

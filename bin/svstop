@@ -23,6 +23,10 @@ if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
 serviceDir="$SVDIR/active/$service"
 
-echo "stopping service $service"
+echo "stopping service $service and removing supervise control"
 
-sv down "$serviceDir"
+sv exit "$serviceDir"
+
+rm -rf "$serviceDir/supervise"
+
+echo "Stopped service $service successfully."
