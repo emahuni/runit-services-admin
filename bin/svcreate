@@ -3,15 +3,15 @@
 #
 
 function printHelp {
-		echo "$0 - Create a service in the services directory (defaults: SVDIR=\$HOME/.sv)"
+		echo "$(basename $0) - Create a service in the services directory (defaults: SVDIR=\$HOME/.sv)"
 		echo
-		echo "Usage $0 [--help] name command|path"
-		echo " - name is the name of the service to create in the $SVDIR (default SVDIR=\$HOME/.sv)"
-		echo " - command is the complete command that runs the service. This includes and args and options."
-		echo "   - it should be single quoted to avoid running it"
-		echo " - path to a backup copy of service to use instead of creating a new one."
-		echo " - you can customise the resulting script later in the service dir for other prelimenaries."
-		echo " --help: display this help screen"
+		echo "Usage $(basename $0) [-h|--help] name command|path"
+		echo " name: the name of the service to create in the $SVDIR (default SVDIR=\$HOME/.sv)"
+		echo " command: complete command that runs the service. This includes and args and options"
+		echo "          - it should be single quoted to avoid running it on definition"
+		echo " path: path to a backup copy of service to use instead of creating a new one"
+		echo "       - you can customise the resulting script later in the service dir for other prelimenaries"
+		echo " -h|--help: display this help screen"
 }
 
 if  ( [ $# -le 1 ] ) || ( [[ $1 == "--help" ]] ); then printHelp; exit 1; fi
