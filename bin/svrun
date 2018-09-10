@@ -3,11 +3,12 @@
 #
 
 function printHelp {
-		echo "$0 - run a service installed in the SVDIR/active"
-		echo "Usage $0 [-b|-f] service";
-		echo " - service is name of the service to run from the $SVDIR (default: $HOME/.sv)"
-		echo " - b for running in background (default)."
-		echo " - f for running it in foreground. This is generally for testing.";;
+		echo "$(basename $0) - run a service installed in the SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-b|-f] service"
+		echo " service: name of the service to run from the SVDIR"
+		echo " -b: run as a background process (default)"
+		echo " -f: run as a foreground process, generally for testing."
 }
 
 if [ ( $# <= 1 ) || ( $1 == "help" ) || ( $1 == "--help" ) ||  ( $1 == "-h" ) ]; then printHelp; exit 1; fi
