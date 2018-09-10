@@ -1,6 +1,18 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # Emmanuel Mahuni (c) 2018 MIT
 
+
+function printHelp {
+		echo "$(basename $0) - stop all running services in the SVDIR: SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-h|--help]"
+		echo " - h or --help: display this help screen"
+		echo
+		echo " Command stops all services in SVDIR dir and all services started using svdrun and then removes all supervise control dirs."
+}
+
+if [[ $# -ge 1 ]]; then printHelp; exit 1; fi
+
 # set the default services dir
 if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 
@@ -10,17 +22,23 @@ services=($SVDIR/*) # create array of SVDIR subdirs
 if [ ${#services[*]} > 0 ]; then
 		# kill our runsvdir instance and any runsv instances it spawned (HUP)
 		if [ -e "$SVDIR/.runsvdir.pid" ]; then
+				echo "runsvdir instance detected on pid: $(cat "$SVDIR/.runsvdir.pid"): killing it and all runsv spawns!"
 				kill -s HUP `cat "$SVDIR/.runsvdir.pid"` && rm -rf  $SVDIR/.runsvdir.pid
 		else
 				# make sure we kill all services in these folders, let's use normal sv control
 				for s in ${services[*]}; do
-						# just do a complete exit, killing the runsv and running finish in turn
-						sv exit "$s" 2>/dev/null
+						if [ -d "$s/supervise" ]; then
+								echo "exiting service: $(basename $s)"
+								# just do a complete exit, killing the runsv and running finish in turn
+								sv exit "$s" >/dev/null
+						fi
 				done
 		fi
+
+		sleep 1
 
 		# remove all supervise dirs
 		rm -rf $SVDIR/*/supervise
 
-		echo "Stopped all services and runsvdir (if used)"
+		echo "Exited all services and runsvdir (if used)"
 fi

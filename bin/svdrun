@@ -3,14 +3,18 @@
 #
 
 function printHelp {
-		echo "$0 - run all services installed in the SVDIR/active using runsvdir: $SVDIR (default: $HOME/.sv)\n\n"
-		echo "Usage $0 [-b|-f] [m]"
+		echo "$(basename $0) - run all active services in the SVDIR using runsvdir: SVDIR (default: \$HOME/.sv)"
+		echo
+		echo "Usage $(basename $0) [-b|-f] [m]"
 		echo " - b: for running in background (default)."
-		echo " - f: for running it in foreground. This is generally for testing.";;
+		echo " - f: for running it in foreground. This is generally for testing."
 		echo " - m: monitor and start any new services in the SVDIR."
+		echo " - h | --help: display this help screen."
+		echo
+		echo "Command exits all services started by this command and runs as discribed above."
 }
 
-if [  ( $1 == "--help" ) ||  ( $# > 2 ) ]; then printHelp; exit 1; fi
+# if [ ( $1 -eq "--help" )  ||  ( $# -g 2 ) ]; then printHelp; exit 1; fi
 
 # echo service: $service
 
@@ -20,10 +24,12 @@ do
 		case $opt in
 				m) monitor=1;;
 				f) export fg="1";; #echo 'in fg mode';;
-				*) printHelp;
+				*) help=true;;
 		esac
 done
 shift $(($OPTIND - 1))
+
+if [ ! -z $help ]; then printHelp; exit 1; fi
 
 # set the default services dir
 if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
@@ -31,17 +37,19 @@ if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 # see if the services dir has active services defined (active are non-dot dirs)
 services=($SVDIR/*) # create array of SVDIR subdirs
 # check if the array has a length of > 0
-if [ ${#services[*]} > 0 ]; then
-		# stop previous runsvdir and all services
-		./svdstop
+if [ ${#services[*]} -g 0 ]; then
+		# stop previous runsvdir and all services and clean their dirs of supervise
+		$(dirname $0)/svdstop
 
-		echo "Starting enabled services in $SVDIR...";
+		sleep 1
+
+		echo "Starting enabled services in $SVDIR/ ..."
 
 		if [ $monitor ]; then
 				if [ $fg ]; then
-						(runsvdir $SVDIR)
+						runsvdir $SVDIR
 				else
-						(runsvdir $SVDIR >$SVDIR/.runsvdir.log & )
+						runsvdir $SVDIR >>$SVDIR/.runsvdir.log & #
 				fi
 
 				# capture the pid so we know our runsvdir instance
@@ -49,15 +57,17 @@ if [ ${#services[*]} > 0 ]; then
 		else
 				rm -f $SVDIR/.runsv.log
 				for s in ${services[*]}; do
+						echo starting service: $(basename $s) ...
+
 						if [ $fg ]; then
-								(runsv $s)
+								runsv $s
 						else
-								(runsv $s >>$SVDIR/.runsv.log & )
+								runsv $s >>$SVDIR/.runsv.log & #
 						fi
 				done
 		fi
 
-		echo "${#services[*]} services initiated successfully!"
+		echo "${#services[*]} services started successfully!"
 else
 		echo "There is no services in active services dir. ";
 		exit 2;
