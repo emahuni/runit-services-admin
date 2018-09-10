@@ -19,7 +19,7 @@ if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
 # see if the services dir has active services defined (active are non-dot dirs)
 services=($SVDIR/*) # create array of SVDIR subdirs
 # check if the array has a length of > 0
-if [ ${#services[*]} > 0 ]; then
+if [ ${#services[*]} -gt 0 ]; then
 		# kill our runsvdir instance and any runsv instances it spawned (HUP)
 		if [ -e "$SVDIR/.runsvdir.pid" ]; then
 				echo "runsvdir instance detected on pid: $(cat "$SVDIR/.runsvdir.pid"): killing it and all runsv spawns!"
