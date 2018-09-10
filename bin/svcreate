@@ -25,7 +25,9 @@ esac
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
 
-serviceDir="$SVDIR/active/$name"
+# todo: do a regex checkup of name
+
+serviceDir="$SVDIR/$name"
 
 if [ -d "$serviceDir" ]; then
 		echo "Service '$name' already exists as '$serviceDir'.";
@@ -53,7 +55,7 @@ if [ \$fg ]; then
 else
     # run command in the background, this is the actual expected behaviour of services and the default command
     # that is ran by services admin.
-    chpst $command >/dev/null 2>&1
+    chpst $command >/dev/null & #
 fi
 " > "$serviceDir/run"
 
@@ -68,7 +70,7 @@ if [ \$fg ]; then
 		echo 'wip finish script foreground mode'
 else
     # do something in the background
-		echo 'wip finish script background mode' >/dev/null 2>&1
+		echo 'wip finish script background mode' >/dev/null & #
 fi
 " > "$serviceDir/finish"
 
