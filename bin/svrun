@@ -8,7 +8,8 @@ function printHelp {
 		echo "Usage $(basename $0) [-b|-f] service"
 		echo " service: name of the service to run from the SVDIR"
 		echo " -b: run as a background process (default)"
-		echo " -f: run as a foreground process, generally for testing."
+		echo " -f: run as a foreground process, generally for testing"
+		echo " -r: restart service if it is running"
 }
 
 if ( [ $# -lt 1 ] ) || ( [ $1 == "--help" ] ) ||  ( [ $1 == "-h" ] ) ; then printHelp; exit 1; fi
@@ -22,11 +23,12 @@ esac
 # echo service: $service
 
 # check the kind of run we want done
-while getopts ":fb" opt
+while getopts ":fbr" opt
 do
 		case $opt in
 				f) export fg="1";; #echo 'in fg mode';;
-				b) export fg="0";: # echo 'in bg mode'; ;;
+				b) export fg="0";; # echo 'in bg mode'; ;;
+				r) rstsv=1;;
 		esac
 done
 shift $(($OPTIND - 1))
@@ -41,7 +43,7 @@ if [ -d "$SVDIR/$service" ]; then
 				# the service was taken down normally so we need to take it up graciously
 				echo "Taking service up, it was down..."
 				sv up $service
-		elif [[ $status != *"run:"* ]]; then
+		elif ( [[ $status != *"run:"* ]] ) || ( [ ! -z $rstsv ] ); then
 				# the status is something else probably a warning.
 				# remove the supervise dir if it exists
 				if [ -d "$SVDIR/$service/supervise" ]; then rm -rf "$SVDIR/$service/supervise"; fi
