@@ -1,5 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/bash
-# Emmanuel Mahuni (c) 2008 MIT
+#!/bin/bash
+# Emmanuel Mahuni (c) 2018 MIT
 #
 
 function printHelp {
@@ -30,7 +30,7 @@ serviceDir="$SVDIR/$name"
 if [[ -e "$serviceDir/down" ]]; then echo "service already set to go down on startup"; exit 0; fi
 
 # create the service down file
-echo "#!/data/data/com.termux/files/usr/bin/bash
+echo "#!/bin/bash
 echo 'Downing $name service...'
 " > "$serviceDir/down"
 

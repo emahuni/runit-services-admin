@@ -1,5 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/bash
-# Emmanuel Mahuni (c) 2008 MIT
+#!/bin/bash
+# Emmanuel Mahuni (c) 2018 MIT
 #
 
 function printHelp {
@@ -39,7 +39,7 @@ fi
 (mkdir "$serviceDir" -p)
 
 # create the service run file
-echo "#!/data/data/com.termux/files/usr/bin/bash
+echo "#!/bin/bash
 echo 'Starting $name service...'
 # do any preliminaries here, setting of paths ports etc
 
@@ -60,7 +60,7 @@ fi
 
 
 # create the service finish file
-echo "#!/data/data/com.termux/files/usr/bin/bash
+echo "#!/bin/bash
 echo 'Cleaning up after $name service...'
 # do any preliminaries here, setting of paths ports etc
 

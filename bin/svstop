@@ -1,6 +1,6 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/bin/bash
 #
-# Emmanuel Mahuni (c) 2008 MIT
+# Emmanuel Mahuni (c) 2018 MIT
 #
 
 function printHelp {

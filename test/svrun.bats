@@ -1,4 +1,4 @@
-#!/data/data/com.termux/file/usr/bin/env bats
+#!/bin/env bats
 
 SVDIRBCK=$SVDIR
 SVDIR=./test/fixtures
