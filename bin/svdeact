@@ -33,10 +33,10 @@ if [ -d $deactiveDir ]; then
 		if [[ $? == 0 ]]; then echo "old inactive service  was successfully deleted"; else echo "couldn't delete inactive service!"; exit 3; fi
 fi
 
-echo "deactivating service to .$service ..."
+echo "deactivating service '$service' ..."
 
 # mkdir -p "$deactiveDir"
 mv -f "$SVDIR/$service" "$deactiveDir"
 
 
-if [[ $? == 0 ]]; then echo "service was successfully removed"; else echo "couldn't deactivate service successfully"; fi
+if [[ $? == 0 ]]; then echo "service was successfully deactivated"; else echo "couldn't deactivate service successfully"; fi

@@ -24,7 +24,7 @@ if [ ! -d $deactiveDir ]; then
 		exit 3
 fi
 
-echo "activating service $service ..."
+echo "activating service '$service' ..."
 
 mv -f "$deactiveDir" "$SVDIR/$service"
 
