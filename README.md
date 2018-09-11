@@ -17,7 +17,7 @@ There are two ways to install this package through NPM or using git cloning and 
 #### Using NPM
 
 ```sh
-npm install --global runit-services-admin
+npm i -g runit-services-admin
 ```
 
 This assumes that you have NPM installed, which is installed when you install NodeJs. You can also use Yarn to do the same thing.
@@ -61,7 +61,7 @@ Uninstalling is simple
 #### Using NPM
 
 ```sh
-npm uninstall --global runit-services-admin
+npm un -g runit-services-admin
 ```
 
 #### Using Git
