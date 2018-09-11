@@ -1,0 +1,26 @@
+{
+  "name": "termux-services-admin",
+  "version": "1.0.0",
+  "description": "Services administration for runit. It is mainly meant to be used on termux, but should work on any other nix system using runit.",
+  "directories": {
+    "test": "test",
+		"bin": "bin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emahuni/termux-services-admin.git"
+  },
+  "keywords": [
+    "runit",
+    "termux",
+    "services",
+    "management",
+    "administration"
+  ],
+  "author": "Emmanuel Mahuni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emahuni/termux-services-admin/issues"
+  },
+  "homepage": "https://github.com/emahuni/termux-services-admin#readme"
+}
