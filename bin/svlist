@@ -15,21 +15,36 @@ if [ $# -gt 0 ]; then printHelp; exit 1; fi
 if [ -z "$SVDIR" ]; then export SVDIR=$HOME/.sv; fi
 
 # see if the services dir has active services defined (active are non-dot dirs)
-services=($SVDIR/*) # create array of SVDIR subdirs
+services=($SVDIR/*/ $SVDIR/.[a-z_]*/) # create array of SVDIR subdirs visible and hidden
 # check if the array has a length of > 0
 if [ ${#services[*]} -gt 0 ]; then
 		echo "${#services[*]} services installed in $SVDIR:"
+		echo
 
 		for s in ${services[*]}; do
 				sn=$(basename $s)
+				status=$(sv s $sn)
+
+				if [[ $status == "run:"* ]]; then status='(running)'; elif [[ $status == "down:"* ]]; then status='(down)'; else status='(stopped)'; fi
+
+				if [ -e "$SVDIR/$sn/down" ]; then wants='(down)'; else wants='(up)'; fi
+
 				if [[ $sn == "."* ]]; then
-						avail='(inactive)'
+						avail="(inactive) - usually $wants"
 				else
-						avail='(active)'
+						avail="(active) - status $status - usually $wants"
 				fi
 
 				echo "    - $sn $avail"
 		done
+
+		echo
+		echo "  (Use 'svact service' to activate a service (service is service name without the . for an inactive service))"
+		echo "  (Use 'svdeact service' to deactivate a service)"
+		echo "  (Use 'svrun service' to run a service)"
+		echo "  (Use 'sv down service' to down a service (applies to a running service))"
+		echo "  (Use 'sv up service' to up a service (applies to a down service))"
+		echo "  (Use 'svstop service' to stop a service)"
 else
 		echo "There is no services defined in the services dir: $SVDIR "
 fi
