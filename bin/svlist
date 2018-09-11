@@ -15,7 +15,12 @@ if [ $# -gt 0 ]; then printHelp; exit 1; fi
 if [ -z "$SVDIR" ]; then export SVDIR=$HOME/.sv; fi
 
 # see if the services dir has active services defined (active are non-dot dirs)
-services=($SVDIR/*/ $SVDIR/.[a-z_]*/) # create array of SVDIR subdirs visible and hidden
+active=($SVDIR/*/)
+if [[ "$active" == *"*"* ]]; then unset active; fi # remove empty array
+inactive=($SVDIR/.[a-z_]*/)
+if [[ "$inactive" == *"*"* ]]; then unset inactive; fi # remove empty array
+
+services=(${active[*]} ${inactive[*]}) # create array of SVDIR subdirs visible and hidden
 # check if the array has a length of > 0
 if [ ${#services[*]} -gt 0 ]; then
 		echo "${#services[*]} services installed in $SVDIR:"
