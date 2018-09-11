@@ -1,6 +1,6 @@
 {
   "name": "runit-services-admin",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Unix/Linux services administration for runit. It is mainly meant to be used on termux, but should work on any other Unix systems using runit.",
   "directories": {
     "test": "test",
