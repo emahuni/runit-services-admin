@@ -29,8 +29,13 @@ serviceDir="$SVDIR/$name"
 
 if [[ -e "$serviceDir/down" ]]; then echo "service already set to go down on startup"; exit 0; fi
 
+
+# check to see if this is termux and change the shebang accordingly
+if [ -e "$PREFIX/bin/termux-info" ]; then shebang='#!/data/data/com.termux/files/usr/bin/bash'; else shebang='#!/bin/bash'; fi
+
+
 # create the service down file
-echo "#!/bin/bash
+echo "$shebang
 echo 'Downing $name service...'
 " > "$serviceDir/down"
 
