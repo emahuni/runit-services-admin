@@ -34,6 +34,9 @@ done
 shift $(($OPTIND - 1))
 
 
+# set the default services dir
+if [ -z "$SVDIR" ]; then export SVDIR=$HOME/.sv; fi
+
 # see if the service is defined in the svdir
 if [ -d "$SVDIR/$service" ]; then
 		# check if the status of the service can be queried

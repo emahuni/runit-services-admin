@@ -15,7 +15,7 @@ case $# in
 esac
 
 # set the default services dir
-if [ -z "$SVDIR" ]; then SVDIR=$HOME/.sv; fi
+if [ -z "$SVDIR" ]; then export SVDIR=$HOME/.sv; fi
 
 deactiveDir="$SVDIR/.$service"
 

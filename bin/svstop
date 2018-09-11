@@ -20,7 +20,7 @@ esac
 
 
 # make sure we have a default for the services directory
-if [ -z "$SVDIR" ]; then SVDIR="$HOME/.sv"; fi
+if [ -z "$SVDIR" ]; then export SVDIR="$HOME/.sv"; fi
 
 serviceDir="$SVDIR/$service"
 
