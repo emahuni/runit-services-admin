@@ -22,6 +22,9 @@ esac
 # make sure we have a default for the services directory
 if [ -z "$SVDIR" ]; then export SVDIR="$HOME/.sv"; fi
 
+# make sure the service exists
+if [ ! -d "$SVDIR/$service" ]; then echo "Service '$service' not found in '$SVDIR'!"; exit 4; fi
+
 serviceDir="$SVDIR/$service"
 
 echo "Stopping service '$service' and removing supervise control"

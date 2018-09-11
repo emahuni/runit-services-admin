@@ -27,6 +27,9 @@ if [ -z "$SVDIR" ]; then export SVDIR="$HOME/.sv"; fi
 
 serviceDir="$SVDIR/$name"
 
+# make sure the service exists
+if [ ! -d "$serviceDir" ]; then echo "Service '$name' not found in '$SVDIR'!"; exit 4; fi
+
 if [[ -e "$serviceDir/down" ]]; then echo "service already set to go down on startup"; exit 0; fi
 
 

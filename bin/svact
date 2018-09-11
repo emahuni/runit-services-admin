@@ -20,7 +20,7 @@ if [ -z "$SVDIR" ]; then export SVDIR=$HOME/.sv; fi
 deactiveDir="$SVDIR/.$service"
 
 if [ ! -d $deactiveDir ]; then
-		echo "couldn't active service '$service' from '$deactiveDir'!"
+		echo "couldn't find service '$service' in '$deactiveDir'!"
 		exit 3
 fi
 
