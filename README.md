@@ -47,11 +47,13 @@ sudo ./install
 
 That will install the package binaries as explained before.
 
-### Startup
+### Environment
+Put environment variable SVDIR in your `~/.bash_profile` file. It points to the services directory: `export SVDIR=$HOME/.sv`. You can use any other directory you want, this is the default.
+
+#### Startup
 
 For the services to automatically startup when you start your terminal or your system add line `svdrun` into your `~/.bash_profile` file.
-It will run all active services installed in your $SVDIR directory `~/.sv` by default.
-To override the SVDIR directory put line `SVDIR=path/to/custom/SVDIR` before the abovementioned line.
+It will run all active services installed in your $SVDIR directory, therefore this line should be below the above environment setup.
 
 
 ## Uninstalling
@@ -76,7 +78,7 @@ see above where cloning or zip download was done. Do the same for either method 
 
 ### Startup
 
-Remove the lines you inserted into your `~/.bash_profile` file
+Remove the lines you inserted into your `~/.bash_profile` file.
 
 
 ## Usage
