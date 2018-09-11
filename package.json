@@ -1,10 +1,10 @@
 {
   "name": "runit-services-admin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Unix/Linux services administration for runit. It is mainly meant to be used on termux, but should work on any other Unix systems using runit.",
   "directories": {
     "test": "test",
-		"bin": "bin"
+    "bin": "bin"
   },
   "repository": {
     "type": "git",
@@ -16,14 +16,14 @@
     "services",
     "management",
     "administration",
-		"bash",
-		"unix",
-		"linux",
-		"shell",
-		"bourne shell",
-		"create linux service",
-		"create unix service",
-		"run unix/linux service"
+    "bash",
+    "unix",
+    "linux",
+    "shell",
+    "bourne shell",
+    "create linux service",
+    "create unix service",
+    "run unix/linux service"
   ],
   "author": "Emmanuel Mahuni",
   "license": "MIT",
