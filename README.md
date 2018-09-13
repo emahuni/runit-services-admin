@@ -40,10 +40,10 @@ If you have neither Git nor NPM installed you can do the Git part manually.
 - click on download and this will download the repository as a zip file
 - extract the contents of the zip file
 - on the terminal do:
-   ```sh
+```sh
 cd path/to/where/you/extracted/the/zip/file
 sudo ./install
-	 ```
+```
 
 That will install the package binaries as explained before.
 
