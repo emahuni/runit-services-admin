@@ -106,7 +106,7 @@ svcreate docs 'http-server /mnt/storage/docs/ -p 8080'
 - The above example creates a service in `~/.sv` that runs the NodeJs package `http-server`, that is instructed to serve html files in `/mnt/storage/docs/` on `port 8080`.
 - If `svdrun -m` is set up in `~/.bash_profile` then the service will begin running immediately and on startup.
 - Else you can use `svrun docs` to begin running the service when required.
-- You can use the other commands to manage the service as simple as `svdrop docs` *deletes the service*.
+- You can use the other commands to manage the service as simple as `svdrop docs` - *deletes the service*.
 
 
 In addition to the above-mentioned commands you can use the runit `sv` command to control and query installed active services eg: `sv s docs` to see the above-example service status that's if you haven't deleted it with the last command. see `sv --help` for more info. http://www.smarden.org/runit/
